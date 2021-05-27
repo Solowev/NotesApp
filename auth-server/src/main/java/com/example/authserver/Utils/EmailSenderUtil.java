@@ -8,21 +8,22 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class EmailSenderUtil {
+public class EmailSenderUtil implements OtpSender {
 
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendMessage(String to, String subject, String text){
+    @Override
+    public void sendOtp(String to, String code) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("noreply@notesapp.ru");
         message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        try{
+        message.setSubject("Authentication code");
+        message.setText("Here is your authentication code - " + code);
+        try {
             javaMailSender.send(message);
-        }catch(MailException ex){
-            ex.printStackTrace();
+        }catch(MailException e){
+            e.printStackTrace();
         }
     }
 }
