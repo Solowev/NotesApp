@@ -29,6 +29,7 @@ public class UserService {
     @Autowired
     private OtpRepository otpRepository;
 
+
     public void addUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -37,7 +38,7 @@ public class UserService {
 
     public void auth(User user){
         Optional<User> optionalUser = userRepository.findUserByUsername(user.getUsername());
-        if(!optionalUser.isPresent()){
+        if(optionalUser.isEmpty()){
             log.info("Couldn't find user with username: " + user.getUsername());
             throw new BadCredentialsException("Bad credentials");
         }
