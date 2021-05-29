@@ -18,10 +18,10 @@ public class Otp {
     @Column
     private String code;
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    @PrePersist
-    void onCreate(){
-        setCreatedAt(LocalDateTime.now());
+    @PreUpdate
+    void onUpdate(){
+        setUpdatedAt(LocalDateTime.now());
     }
 }

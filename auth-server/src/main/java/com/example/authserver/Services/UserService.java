@@ -67,11 +67,9 @@ public class UserService {
         log.info(otpToValidate.getUsername() + otpToValidate.getCode());
         if(userOtp.isPresent()) {
             Otp otp = userOtp.get();
-            Duration duration = Duration.between(otp.getCreatedAt(),LocalDateTime.now());
-            System.out.println(duration.toMinutes());
+            Duration duration = Duration.between(otp.getUpdatedAt(),LocalDateTime.now());
             if(duration.toMinutes() >= 5){
                 log.info("user's code has expired");
-                generateNewOtp(otpToValidate.getUsername());
                 return false;
             }
             if(otp.getCode().equals(otpToValidate.getCode())) {
