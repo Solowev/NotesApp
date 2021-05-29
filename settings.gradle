@@ -1,2 +1,3 @@
 rootProject.name = 'MyNotesApp'
 include 'auth-server'
+include 'main-server'
