@@ -1,5 +1,6 @@
 package com.example.authserver.Entities;
 
+import com.example.authserver.Enums.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +19,6 @@ public class User {
     private String password;
     @Column
     private String email;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

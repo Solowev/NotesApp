@@ -1,4 +1,4 @@
-package com.example.authserver.Utils;
+package com.example.authserver.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class EmailSenderUtil implements OtpSender {
+public class EmailOtpService implements OtpService {
 
     @Autowired
     private JavaMailSender javaMailSender;

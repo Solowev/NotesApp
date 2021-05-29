@@ -1,5 +1,5 @@
-package com.example.authserver.Utils;
+package com.example.authserver.Services;
 
-public interface OtpSender {
+public interface OtpService {
     void sendOtp(String to, String code);
 }
