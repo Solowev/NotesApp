@@ -38,7 +38,7 @@ public class UserService {
 
     public void addUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_USER);
         userRepository.save(user);
         log.info(String.format("User with username: %s has registered", user.getUsername()));
     }
