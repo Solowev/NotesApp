@@ -8,7 +8,6 @@ import com.example.authserver.Repositories.UserRepository;
 import com.example.authserver.Utils.GenerateCodeUtil;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Optional;
 
 @Service
@@ -53,8 +51,7 @@ public class UserService {
         User foundUser = optionalUser.get();
         if(passwordEncoder.matches(user.getPassword(), foundUser.getPassword())){
             log.info("User was authenticated with username: " + foundUser.getUsername());
-            String code = generateNewOtp(foundUser.getUsername());
-            sendMail(foundUser.getEmail(), code);
+            generateNewOtp(foundUser);
 
         } else{
             log.info(String.format("User was found with username %s, but with wrong password",user.getUsername()));
@@ -73,6 +70,7 @@ public class UserService {
                 return false;
             }
             if(otp.getCode().equals(otpToValidate.getCode())) {
+
                 log.info("found code for " + otp.getUsername() + "code user " + otp.getCode() + "otpToValidate " +otpToValidate.getCode());
                 return true;
             }
@@ -81,23 +79,23 @@ public class UserService {
         return false;
     }
 
-    protected void sendMail(String email, String code){
+    protected void sendCode(String email, String code){
         otpService.sendOtp(email, code);
     }
 
-    protected String generateNewOtp(String username){
+    protected void generateNewOtp(User user){
         String code = GenerateCodeUtil.generateCode();
-        Optional<Otp> userOtp = otpRepository.findOtpByUsername(username);
+        Optional<Otp> userOtp = otpRepository.findOtpByUsername(user.getUsername());
         Otp otp;
         if(userOtp.isPresent()){
             otp = userOtp.get();
         } else{
             otp = new Otp();
-            otp.setUsername(username);
+            otp.setUsername(user.getUsername());
         }
         otp.setCode(code);
         otpRepository.save(otp);
-        return code;
+        sendCode(user.getEmail(), code);
     }
 
 
