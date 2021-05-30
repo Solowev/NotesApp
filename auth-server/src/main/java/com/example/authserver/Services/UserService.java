@@ -9,6 +9,7 @@ import com.example.authserver.Utils.GenerateCodeUtil;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findUserByUsername(user.getUsername());
         if(optionalUser.isEmpty()){
             log.info("Couldn't find user with username: " + user.getUsername());
-            throw new BadCredentialsException("Unknown user " + user.getUsername());
+            throw new UsernameNotFoundException("Unknown user " + user.getUsername());
         }
         User foundUser = optionalUser.get();
         if(passwordEncoder.matches(user.getPassword(), foundUser.getPassword())){
