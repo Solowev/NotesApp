@@ -17,10 +17,10 @@ public class Otp {
     private String username;
     @Column
     private String code;
-    @Column(updatable = false)
     private LocalDateTime updatedAt;
 
     @PreUpdate
+    @PrePersist
     void onUpdate(){
         setUpdatedAt(LocalDateTime.now());
     }
