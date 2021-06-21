@@ -1,14 +1,19 @@
 package com.example.authserver.Controllers;
 
 import com.example.authserver.Entities.Otp;
+import com.example.authserver.Entities.Role;
 import com.example.authserver.Entities.User;
+import com.example.authserver.Payload.UserResponse;
 import com.example.authserver.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
+
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class AuthController {
@@ -17,21 +22,29 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/user/add")
-    public void addUser(@RequestBody User user){
+    public ResponseEntity<?> addUser(@RequestBody User user){
         userService.addUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/user/auth")
-    public void authUser(@RequestBody User user){
-        userService.auth(user);
+    public ResponseEntity<?> authUser(@RequestBody User user){
+        if(userService.auth(user)){
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/otp/check")
-    public void checkAuth(@RequestBody Otp otp, HttpServletResponse response){
+    public ResponseEntity<?> checkAuth(@RequestBody Otp otp){
         if(userService.checkAuth(otp)){
-            response.setStatus(HttpServletResponse.SC_OK);
-        } else{
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return ResponseEntity.ok().build();
         }
+        return ResponseEntity.badRequest().build();
+    }
+    @PostMapping("/user/role")
+    public ResponseEntity<?> getUserRole(@RequestBody User user){
+        return ResponseEntity.ok(new UserResponse(user.getUsername(), userService.findRoles(user.getUsername())));
     }
 }

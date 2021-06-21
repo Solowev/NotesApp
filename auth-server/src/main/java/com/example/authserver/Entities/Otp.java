@@ -21,7 +21,7 @@ public class Otp {
 
     @PreUpdate
     @PrePersist
-    void onUpdate(){
+    void onSave(){
         setUpdatedAt(LocalDateTime.now());
     }
 }
